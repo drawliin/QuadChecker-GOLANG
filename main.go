@@ -19,8 +19,6 @@ func main() {
 
 	result := ""
 	for _, quadF := range quads {
-		//cmd := exec.Command("./"+quad, width, height) // Ready to execute Command
-		//output, err := cmd.Output()
 		output := quad(quadF, width, height)
 		if output == fullInput {
 			if result != "" {
@@ -173,7 +171,7 @@ func QuadE(x, y int) string {
 	return output
 }
 
-//Quad Runner
+//Quad Executer
 func quad(name string, x, y int) string {
 	switch name {
 	case "QuadA":
