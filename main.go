@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -15,16 +17,17 @@ func main() {
 	}
 	width, height := len(lines[0]), len(lines)
 
-	quads := []string{"QuadA", "QuadB", "QuadC", "QuadD", "QuadE"}
+	quads := []string{"quadA", "quadB", "quadC", "quadD", "quadE"}
 
 	result := ""
-	for _, quadF := range quads {
-		output := quad(quadF, width, height)
-		if output == fullInput {
+	for _, quad := range quads {
+		cmd := exec.Command("./"+quad, strconv.Itoa(width), strconv.Itoa(height))
+		output, err := cmd.Output()
+		if err == nil && string(output) == fullInput {
 			if result != "" {
 				result += " || "
 			}
-			result += fmt.Sprintf("[%s] [%d] [%d]", quadF, width, height)
+			result += fmt.Sprintf("[%s] [%d] [%d]", quad, width, height)
 		}
 	}
 	if len(result) == 0 {
@@ -42,148 +45,4 @@ func ReadInput() ([]string, string) {
 		arr = arr[:len(arr)-1]
 	}
 	return arr, string(bytes)
-}
-
-// QUADS FUNCTIONS
-func QuadA(x, y int) string {
-	output := ""
-	if x > 0 && y > 0 {
-		for row := 1; row <= y; row++ {
-			for col := 1; col <= x; col++ {
-				if (row == 1 || row == y) && (col == 1 || col == x) {
-					output += "o"
-				} else if row == 1 || row == y {
-					output += "-"
-				} else if col == 1 || col == x {
-					output += "|"
-				} else {
-					output += " "
-				}
-			}
-			output += "\n"
-		}
-	}
-	return output
-}
-
-func QuadB(x, y int) string {
-	output := ""
-	if x > 0 && y > 0 {
-		for row := 1; row <= y; row++ {
-			for col := 1; col <= x; col++ {
-				if row == 1 || row == y {
-					if col == 1 && row == 1 {
-						output += "/"
-					} else if col == x && row == 1 {
-						output += "\\"
-					} else if col == 1 && row == y {
-						output += "\\"
-					} else if col == x && row == y {
-						output += "/"
-					} else {
-						output += "*"
-					}
-				} else if col == 1 || col == x {
-					output += "*"
-				} else {
-					output += " "
-				}
-
-			}
-			output += "\n"
-		}
-	}
-	return output
-}
-
-func QuadC(x, y int) string {
-	output := ""
-	if x > 0 && y > 0 {
-		for row := 1; row <= y; row++ {
-			for col := 1; col <= x; col++ {
-				if row == 1 {
-					if col == 1 || col == x {
-						output += "A"
-					} else {
-						output += "B"
-					}
-				} else if row == y {
-					if col == 1 || col == x {
-						output += "C"
-					} else {
-						output += "B"
-					}
-				} else {
-					if col == 1 || col == x {
-						output += "B"
-					} else {
-						output += " "
-					}
-				}
-			}
-			output += "\n"
-		}
-	}
-	return output
-}
-
-func QuadD(x, y int) string {
-	output := ""
-	if x > 0 && y > 0 {
-		for row := 1; row <= y; row++ {
-			for col := 1; col <= x; col++ {
-				if (row == 1 || row == y) && col == 1 {
-					output += "A"
-				} else if (row == 1 || row == y) && col == x {
-					output += "C"
-				} else if row == 1 || row == y || col == 1 || col == x {
-					output += "B"
-				} else {
-					output += " "
-				}
-			}
-			output += "\n"
-		}
-	}
-	return output
-}
-
-func QuadE(x, y int) string {
-	output := ""
-	if x > 0 && y > 0 {
-		for row := 1; row <= y; row++ {
-			for col := 1; col <= x; col++ {
-				if row == 1 && col == 1 {
-					output += "A"
-				} else if (row == 1 && col == x) || (row == y && col == 1) {
-					output += "C"
-				} else if row == y && col == x {
-					output += "A"
-				} else if (row == 1 || row == y) || (col == 1 || col == x) {
-					output += "B"
-				} else {
-					output += " "
-				}
-			}
-			output += "\n"
-		}
-	}
-	return output
-}
-
-//Quad Executer
-func quad(name string, x, y int) string {
-	switch name {
-	case "QuadA":
-		return QuadA(x, y)
-	case "QuadB":
-		return QuadB(x, y)
-	case "QuadC":
-		return QuadC(x, y)
-	case "QuadD":
-		return QuadD(x, y)
-	case "QuadE":
-		return QuadE(x, y)
-	}
-	return ""
 }
